@@ -16,8 +16,66 @@
     </ul>
   </form>
 <script>
+  //found data in gitHub and put in url. First need to fetch data then filter array down to subset to search match of city or state
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+const cities = [];
+
+fetch(endpoint)
+  .then(blob => blob.json())
+  // let cities = []
+  //  .then(data => cities = data);
+  .then(data => cities.push(...data)); //spread into a fuction or push method with ...
+
+  //NEXT when type into search need to run fuction to filter down array into subset where we can listen
+  //create function called findMatches that takes in a word to mathcn and also the cities array. we want to pass in this data to function to filiter and return cities array and call filter on it to chisel down to subset to a place
+  function findMatches(wordToMatch, cities) {
+    return cities.filter(place => {
+      //here we need to figure out if city or state matches what was searched
+    const regex = new RegExp(wordToMatch, 'gi'); //g is global looks through entire string, i is going to be insensitive meaning it will not be case sensitive
+      // return place.city.match(/wordToMatch/i)
+      return place.city.match(regex) || place.state.match(regex);
+    });
+  }
+
+  //give nice commas in population number
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+//CREATE display fuction whevener search box aka value is changed
+function displayMatches() {
+  // console.log(this.value);
+  const matchArray = findMatches(this.value, cities);
+  // console.log(matchArray);
+  const html = matchArray.map(place => { //map calls array we really want string see .join
+    //highlight search enter and format population #s
+    //before return create a regX or match the city name and use regX to replace word that it matches like WES with a span of the class of HL and the word that it matches
+    const regex = new RegExp(this.value, 'gi');
+    // const cityName = place.city.replace(regex, `<span class="h1">${this.value}</span>`);
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+    return `
+    <li>
+      <span class="name">${cityName}, ${stateName}</span>
+      <span class="population">${numberWithCommas(place.population)}</span>
+    </li>
+   `;   
+  }).join(''); //turns from array with multiple items into one big string
+  suggestions.innerHTML = html;
+}
+
+const searchInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
+
+//listen for change event then run find matches
+searchInput.addEventListener('change', displayMatches); //change event only occurs when you type off input
+searchInput.addEventListener('keyup', displayMatches); //everytime key up tells what is entered in search box
 
 </script>
 </body>
 </html>
+
+
+<!-- *note get all data first and functionality in place then hook up event listeners and create HTML-->
