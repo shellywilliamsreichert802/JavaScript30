@@ -97,6 +97,86 @@
   </div>
 
 <script>
+  // document.addEventListener('DOMContentLoaded', () => {
+    // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    // let lastChecked;
+
+  //   checkboxes.forEach(checkbox => {
+  //     checkbox.addEventListener('click', (e) => {
+  //       //when shift is pressed
+  //       if (e.shiftKey && lastChecked) {
+  //         let inBetween = false;
+  //         checkboxes.forEach(checkbox => {
+  //           //check if the current checkox is in btween the LastChecked & clicked one
+  //           if (checkbox === lastChecked || checkbox === e.target) {
+  //             inBetween = !inBetween; //toggle inBetween on first and last match
+  //           }
+
+  //           //Check all boxes in between
+  //           if(inBetween) {
+  //             checkbox.checked = lastChecked.checked; //match last checkbox's state
+  //           }
+  //         });
+  //       }
+
+  //       //update last checked item
+  //       lastChecked = e.target;
+  //     });
+  //   });
+  // })
+
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  //   console.log(checkboxes) //shows all checkboxes as input
+
+  let lastChecked; //use let bc will be reassigned
+
+  function handleCheck(e) {
+    //check if they had the shift key down
+    //And check that they are checking it
+    let inBetween = false;
+    if(e.shiftKey && this.checked) {
+      //go ahead and do as please
+      //loop over every checked box
+      checkboxes.forEach(checkbox => {
+        console.log(checkbox);
+        if(checkbox === this || checkbox === lastChecked) { //this means is it the last checked box. Does not check outside order
+          inBetween = !inBetween; //if true turn on inBetween (flagged variable which is set to false once his first one turns true - see below)
+          console.log('Strating to check them inBetween');
+        }
+
+        if(inBetween) {
+          checkbox.checked = true; //true turns it on and this programatically sets to checked. Do for all until last checked inBetween is false no longer runs for unchecked outside of order
+        }
+      });
+    }
+
+    lastChecked = this;
+  }
+
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck)) //when someone clicks add function handleCheck
+  
+  //     checkbox.addEventListener('click', (e) => {
+  //       //when shift is pressed
+  //       if (e.shiftKey && lastChecked) {
+  //         let inBetween = false;
+  //         checkboxes.forEach(checkbox => {
+  //           //check if the current checkox is in btween the LastChecked & clicked one
+  //           if (checkbox === lastChecked || checkbox === e.target) {
+  //             inBetween = !inBetween; //toggle inBetween on first and last match
+  //           }
+
+  //           //Check all boxes in between
+  //           if(inBetween) {
+  //             checkbox.checked = lastChecked.checked; //match last checkbox's state
+  //           }
+  //         });
+  //       }
+
+  //       //update last checked item
+  //       lastChecked = e.target;
+  //     });
+  //   });
+  // })
 </script>
 </body>
 </html>
